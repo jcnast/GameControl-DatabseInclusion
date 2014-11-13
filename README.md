@@ -8,3 +8,5 @@ The full database is there are ready to use and be populated on command. All I n
 an have them interact with each other by calling the interaction command to modify the database as the game goes on.
 
 EXCITING!
+
+***NO USE WITHOUT MY EXPLICIT PERMISION IS ALLOWED***
