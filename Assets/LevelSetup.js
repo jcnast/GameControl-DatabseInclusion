@@ -5,6 +5,8 @@ var tableName : String;
 var columnNames : Array;
 var columnValues : Array;
 
+var character_object : GameObject;
+
 function Start()
 {
 	if (System.IO.File.Exists("InteractionDB.sqdb")) // if the database exists, only create the tables if they do not exist
@@ -77,6 +79,7 @@ function Start()
 	
 	// Creat the starting people
 	Default_People();
+	Create_Character_Objects();
 }
 
 function Update () {
@@ -467,4 +470,47 @@ function Calculate_Favour(character_ID : int, aquaintance_ID : int)
 	db.BasicQuery("UPDATE characters SET "+update+" WHERE character_ID = "+character_ID, false);
 
 	db.CloseDB();
+}
+
+function Create_Character_Objects()
+{
+	db = new dbAccess();
+	db.OpenDB("InteractionDB.sqdb");
+	// Get each character_ID to iterate through
+	var characters = db.BasicQuery("SELECT character_ID FROM characters", true);
+	var character_array = new Array(); // Every character's ID
+	while(characters.Read())
+	{ // add each person with the same last name to the character's family
+		character_array.Push(characters.GetValue(0)); // Add each row of matches to the overall group of matches
+	}
+	db.CloseDB();
+	for (var i = 0; i < character_array.length; i++)
+	{
+		var position_x : float;
+		var position_z : float;
+		// assign square coordinates
+		if (i == 0)
+		{
+			position_x = -10;
+			position_z = -10;
+		}
+		else if (i == 1)
+		{
+			position_x = 10;
+			position_z = 10;
+		}
+		else if (i == 2)
+		{
+			position_x = -10;
+			position_z = 10;
+		}
+		else
+		{
+			position_x = 10;
+			position_z = -10;
+		}
+		var current_character = Instantiate(character_object, Vector3(position_x,0,position_z), Quaternion.identity);
+		current_character.tag = character_array[i].ToString();
+		current_character.AddComponent('Character_Behaviour');
+	}
 }
