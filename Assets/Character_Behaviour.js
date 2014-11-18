@@ -16,18 +16,8 @@ function Start () {
 function Update () {
 	if (Time.time > time_start+time_tick)
 	{
-		time_tick += 0.05;
-		aquaintance_ID = Random.Range(1,5); // select a random character
-		var impact_det = Random.Range(0,2);
-		var impact : String; // determine what impact will be had
-		if (impact_det == 0)
-		{
-			impact = 'negative';
-		}
-		else
-		{
-			impact = 'positive';
-		}
+		time_tick += 0.1;
+		aquaintance_ID = Random.Range(1,11); // select a random character
 		if (aquaintance_ID != character_ID) // only interact if character is not self
 		{
 			db = new dbAccess();
@@ -41,8 +31,49 @@ function Update () {
 				relationship_IDs.Push(relationship.GetValue(0));
 			}
 			relationship_ID = relationship_IDs[Random.Range(0,relationship_IDs.length)];
+			// Get character's opinion on the determined topic
+			var char_opinion = db.BasicQuery("SELECT topic, likes, dislikes FROM opinions WHERE opinion_ID = (SELECT opinion_ID FROM relationships WHERE relationship_ID = "+relationship_ID+")", true);
+			var topic : String;
+			var char_likes : String; // make it a list?
+			var char_dislikes : String; // make it a list?
+			while(char_opinion.Read())
+			{
+				topic = char_opinion.GetValue(0);
+				char_likes = char_opinion.GetValue(1);
+				char_dislikes = char_opinion.GetValue(2);
+			}
+			// Get the aquaintance's opinion on the determined topic
+			var aqua_opinion = db.BasicQuery("SELECT likes, dislikes FROM opinions WHERE topic = '"+topic+"' AND character_ID = "+aquaintance_ID, true);
+			var aqua_likes : String; // make it a list?
+			var aqua_dislikes : String; // make it a list?
+			while(aqua_opinion.Read())
+			{
+				aqua_likes = aqua_opinion.GetValue(0);
+				aqua_dislikes = aqua_opinion.GetValue(1);
+			}
 			db.CloseDB();
 			// impact the relationship
+			var impact : String; // determine what impact will be had
+			if (char_likes == aqua_likes || char_dislikes == aqua_dislikes) // if they share interests, they have a good relationship
+			{
+				impact = 'positive';
+			}
+			else if (char_likes == aqua_dislikes || char_dislikes == aqua_likes) // if their interests disagree, they have a bad relationship
+			{
+				impact = 'negative';
+			}
+			else // otherwise they have a random relationship
+			{
+				// if (Random.Range(0,2) == 0)
+				// {
+				// 	impact = 'positive';
+				// }
+				// else
+				// {
+				// 	impact = 'negative';
+				// }
+				return false; // have them not react to each other if they do not 'care' about this relationship
+			}
 			Relationship_Update(relationship_ID, impact);
 		}
 	}
@@ -75,15 +106,21 @@ function Update () {
 	var direction : Vector3;
 	if (allies.length > 1)
 	{
-		var ally = GameObject.FindWithTag(allies[1]);
-		direction = (ally.transform.position-transform.position).normalized;
-		transform.Translate(direction*Time.deltaTime);
+		for (var j = 1; j < allies.length; j++)
+		{
+			var ally = GameObject.FindWithTag(allies[j]);
+			direction = (ally.transform.position-transform.position).normalized;
+			transform.Translate(direction*Time.deltaTime);
+		}
 	}
 	if (enemies.length > 1)
 	{
-		var enemy = GameObject.FindWithTag(enemies[1]);
-		direction = (enemy.transform.position-transform.position).normalized;
-		transform.Translate(direction*Time.deltaTime);
+		for (var k = 1; k < enemies.length; k++)
+		{
+			var enemy = GameObject.FindWithTag(enemies[k]);
+			direction = (enemy.transform.position-transform.position).normalized;
+			transform.Translate(direction*Time.deltaTime);
+		}
 	}
 }
 

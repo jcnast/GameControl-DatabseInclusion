@@ -128,8 +128,8 @@ function Max_Element(table,column)
 // Create people
 function Default_People()
 {
-	var first_names = new Array('Thalk', 'Morden', 'Laena', 'Crysten');
-	var last_names = new Array('Smith', 'Stone', 'Seestern', 'Carp');
+	var first_names = new Array('Thalk', 'Morden', 'Laena', 'Crysten', 'Sonya', 'Marissa', 'Jagger', 'Thyra', 'Brawn');
+	var last_names = new Array('Smith', 'Stone', 'Seestern', 'Carp', 'Fisher', 'Butch');
 	// Get the number of characters currently in database for character_IDs
 	var character_ID_start = Max_Element('characters','character_ID')[0];
 	if (typeof(character_ID_start) == System.DBNull) // If there is nothing in the database
@@ -137,12 +137,12 @@ function Default_People()
 		character_ID_start = 1;
 	}
 	// Generate new characters
-	if (System.Convert.ToInt32(character_ID_start) < 4) // For now I only want to deal with 4 people at a time (so no more are created after the first batch)
+	if (System.Convert.ToInt32(character_ID_start) < 10) // For now I only want to deal with 4 people at a time (so no more are created after the first batch)
 	{
 		db = new dbAccess();
 		db.OpenDB("InteractionDB.sqdb");
 		var char_tableName = "characters";
-		for (var i = 0; i < first_names.length; i++)
+		for (var i = 0; i < 10; i++) // make 10 people
 		{
 			var character_ID = System.Convert.ToInt32(character_ID_start)+i; // Unique to each character for easy finding
 			var first_name = first_names[Random.Range(0,first_names.length)]; // character's first_name
@@ -250,28 +250,28 @@ function Default_Opinions()
 			var dislikes : String; // what they dislike about this care
 			if (topic == 'race')
 			{ // if they care about race, determine their likes/dislikes
-				var targets_race = new Array('black', 'white', 'asian'); // posible targets for likes/dislikes per opinion target
+				var targets_race = new Array('black', 'white', 'asian', 'brown'); // posible targets for likes/dislikes per opinion target
 				likes = targets_race[Random.Range(0,targets_race.length)];
 				targets_race.Remove(likes);
 				dislikes = targets_race[Random.Range(0,targets_race.length)];
 			}
 			else if (topic == 'religion')
 			{// if they care about religion, determine their likes/dislikes
-				var targets_religion = new Array('catholic', 'muslim', 'atheist'); // posible targets for likes/dislikes per opinion target
+				var targets_religion = new Array('catholic', 'muslim', 'atheist', 'budhist', 'satanist', 'pastafarian'); // posible targets for likes/dislikes per opinion target
 				likes = targets_religion[Random.Range(0,targets_religion.length)];
 				targets_religion.Remove(likes);
 				dislikes = targets_religion[Random.Range(0,targets_religion.length)];
 			}
 			else if (topic == 'politics')
 			{// if they care about politics, determine their likes/dislikes
-				var targets_politics = new Array('conservative', 'liberal', 'other'); // posible targets for likes/dislikes per opinion target
+				var targets_politics = new Array('conservative', 'liberal', 'dictatorship', 'other'); // posible targets for likes/dislikes per opinion target
 				likes = targets_politics[Random.Range(0,targets_politics.length)];
 				targets_politics.Remove(likes);
 				dislikes = targets_politics[Random.Range(0,targets_politics.length)];
 			}
 			else if (topic == 'family')
 			{// if they care about family, determine their likes/dislikes
-				var targets_family = new Array('yes', 'no'); // posible targets for likes/dislikes per opinion target
+				var targets_family = new Array('yes', 'no', 'indifferent'); // posible targets for likes/dislikes per opinion target
 				likes = targets_family[Random.Range(0,targets_family.length)];
 				targets_family.Remove(likes);
 				dislikes = targets_family[Random.Range(0,targets_family.length)];
@@ -484,33 +484,25 @@ function Create_Character_Objects()
 		character_array.Push(characters.GetValue(0)); // Add each row of matches to the overall group of matches
 	}
 	db.CloseDB();
-	for (var i = 0; i < character_array.length; i++)
+	var number_char = character_array.length;
+	var per_row = Mathf.Sqrt(number_char);
+	var cur_row = 1;
+	var cur_col = 1;
+	for (var i = 0; i < number_char; i++)
 	{
 		var position_x : float;
 		var position_z : float;
 		// assign square coordinates
-		if (i == 0)
+		if (i > per_row*cur_row)
 		{
-			position_x = -10;
-			position_z = -10;
+			cur_row += 1;
+			cur_col = 1;
 		}
-		else if (i == 1)
-		{
-			position_x = 10;
-			position_z = 10;
-		}
-		else if (i == 2)
-		{
-			position_x = -10;
-			position_z = 10;
-		}
-		else
-		{
-			position_x = 10;
-			position_z = -10;
-		}
+		position_x = -20+cur_col*(40/per_row);
+		position_z = -20+cur_row*(40/per_row);
 		var current_character = Instantiate(character_object, Vector3(position_x,0,position_z), Quaternion.identity);
 		current_character.tag = character_array[i].ToString();
 		current_character.AddComponent('Character_Behaviour');
+		cur_col += 1;
 	}
 }
