@@ -20,6 +20,29 @@ The database portion I am particularily proud of, as it was based on the web ver
 
 To mess around with the character abilites:
 
+There are supplied documents for windows, mac and linux (only the windows has been tested currently)
+
+w-a-s-d to move
+
+q and mouse-location for ranged AOE attack
+
+e for local AOE attack
+
+left-click to attack (has a very small attack range)
+
+you will need both the Abilities_ [your_ os_ here] file and the Abilities_ [your_ os_ here]_Data folder in the same location to play the game.
+
+*run in windows mode as there is no UI for exiting or anything
+
 ***********************
 
 To simulate a 10 person village based on random interactions:
+
+There are supplied documents for windows, mac and linux (only the windows has been tested currently)
+
+you will need both the Abilities_ [your_ os_ here] file and the Abilities_ [your_ os_ here]_Data folder in the same location to play the game.
+
+Open the app and run in, it will take some time for anything to happen as it is currently set up for the database to be
+re-made on the first run, and so everything must be created and enough interactions must be run for movement to begin.
+
+*Characters move towards their allies and away from their enemies.
