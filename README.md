@@ -8,8 +8,7 @@ The second is the main project that this has turned in to, which is including a 
 The database is of my own construction and contains a bunch of characters, they opinions that they hold, and their relationships
 with the other characters according to their opinions. Every second, 10 random interactions go off per character and so 
 their relationships progress randomly.
-The code is not terribly well optimized, as each character is trying to access the database and so things get a little congested
-but it is functional. The one update that I am working on is having the character's opinions evolve as they interact more with
+The code is not terribly well optimized, as each character is trying to access the database and so things get a little congested but it is functional (in the RPG format, there would be less hits on the database at a time and would require character driven interactions for change, or for a drastic loading screen to intereact the other characters with each other - a la Shadow of Mordor). The one update that I am working on is having the character's opinions evolve as they interact more with.
 the other characters and so they will change their opinions according to what their friends and enemies are doing.
 
 These two projects are were also a testing ground for animation, particles, and using more of the Unity 3D API.
@@ -40,9 +39,12 @@ To simulate a 10 person village based on random interactions:
 
 There are supplied documents for windows, mac and linux (only the windows has been tested currently)
 
-you will need both the Abilities_ [your_ os_ here] file and the Abilities_ [your_ os_ here]_Data folder in the same location to play the game.
+you will need both the Database_ [your_ os_ here] file and the Database_ [your_ os_ here]_Data folder in the same location to play the game.
 
 Open the app and run in, it will take some time for anything to happen as it is currently set up for the database to be
 re-made on the first run, and so everything must be created and enough interactions must be run for movement to begin.
 
 *Characters move towards their allies and away from their enemies.
+
+**********************
+Please ask if you are interested in using my interaction system
