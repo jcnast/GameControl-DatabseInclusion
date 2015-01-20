@@ -17,7 +17,7 @@ function Update () {
 	if (Time.time > time_start+time_tick)
 	{
 		time_tick += 0.1;
-		aquaintance_ID = Random.Range(1,11); // select a random character
+		aquaintance_ID = Random.Range(1,5); // select a random character CHARACTER NUMBER (+1)
 		if (aquaintance_ID != character_ID) // only interact if character is not self
 		{
 			db = new dbAccess();
@@ -122,6 +122,7 @@ function Update () {
 			transform.Translate(direction*Time.deltaTime);
 		}
 	}
+	ChangeMind(character_ID);
 }
 
 // Updates the relationship based on an interaction
@@ -160,6 +161,65 @@ function Relationship_Update(relationship_ID : int, impact : String)
 	db.CloseDB();
 
 	Calculate_Favour(character_ID, aquaintance_ID);
+}
+
+function ChangeMind(character_ID : int)
+{
+	db = new dbAccess();
+	db.OpenDB("InteractionDB.sqdb");
+	var character_info = db.BasicQuery("SELECT allies, enemies, tolerance_level, leeway FROM characters WHERE character_ID = "+character_ID, true);
+	var character_allies = new Array(); // character's allies
+	var character_enemies = new Array(); // character's enemies
+	var character_tolerance : float; // character's tolerance
+	var character_leeway : float; // character's leeway
+	while(character_info.Read())
+	{	// Character info for calculating if the character changes his opinion
+		if (character_info.GetValue(0) == null)
+		{
+			character_allies = ''.Split(','[0]);
+		}
+		else
+		{
+			character_allies = character_info.GetValue(0).ToString().Split(','[0]);	
+		}
+		if (character_info.GetValue(1) == null)
+		{
+			character_enemies = ''.Split(','[0]);
+		}
+		else
+		{
+			character_enemies = character_info.GetValue(1).ToString().Split(','[0]);	
+		}
+		character_tolerance = character_info.GetValue(2);
+		character_leeway = character_info.GetValue(3);
+	}
+	var character_opinions = db.BasicQuery("SELECT opinion_ID, topic, likes, dislikes, ramp, tolerance, enjoyment FROM opinions WHERE character_ID = "+character_ID, true);
+	while(character_opinions.Read())
+	{	// Go through each opinion to see if it should change
+		var opinion_ID : int = character_opinions.GetValue(0);
+		var opinion_topic : String = character_opinions.GetValue(1);
+		var opinion_likes : String = character_opinions.GetValue(2);
+		var opinion_dislikes : String = character_opinions.GetValue(3);
+		var opinion_ramp : float = character_opinions.GetValue(4);
+		var opinion_tolerance : float = character_opinions.GetValue(5);
+		var opinion_enjoyment : float = character_opinions.GetValue(6);
+		// determine influencing factor on this character's opinions
+		var change_count : float;
+		for(var i = 1; i < character_allies.length; i++)
+		{	// get all info from friends to determine if the character's opnions change
+			var aquaintance_ID = character_allies[i];
+			var aquaintance_opinion = db.BasicQuery("SELECT likes, dislikes, ramp, tolerance, enjoyment FROM opinions WHERE character_ID = "+aquaintance_ID+" AND topic = '"+opinion_topic+"'", true);
+			while(aquaintance_opinion.Read())
+			{ // do stuff with the info from each ally 
+				var aquaintance_likes = aquaintance_opinion.GetValue(0);
+				var aquaintance_dislikes = aquaintance_opinion.GetValue(1);
+				var aquaintance_ramp = aquaintance_opinion.GetValue(2);
+				var aquaintance_tolerance = aquaintance_opinion.GetValue(3);
+				var aquaintance_enjoyment = aquaintance_opinion.GetValue(4);
+			}
+		}
+	}
+	db.CloseDB();
 }
 
 function Calculate_Favour(character_ID : int, aquaintance_ID : int)

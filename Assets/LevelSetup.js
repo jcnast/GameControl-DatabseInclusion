@@ -10,12 +10,13 @@ var character_object : GameObject;
 function Start()
 {
 	if (System.IO.File.Exists("InteractionDB.sqdb")) // if the database exists, only create the tables if they do not exist
-  {	// Just make the lists comma-seperated elements of strings to turn into lists
-  	if (!Check_Table('characters')) // Only make the table if it does not exist already
-  	{ // Create character database
+  	{	// Just make the lists comma-seperated elements of strings to turn into lists
+  		if (!Check_Table('characters')) // Only make the table if it does not exist already
+  		{ // Create character database
 			db = new dbAccess();
 			db.OpenDB("InteractionDB.sqdb");
 			tableName = "characters";
+			// maybe do mom/dad instead of family
 			columnNames = new Array("character_ID","first_name","last_name","age","gender","health","allies","enemies","family","tolerance_level","leeway");
 			columnValues = new Array("integer","text","text","integer","text","integer","text","text","text","real","real");
 			db.CreateTable(tableName,columnNames,columnValues);
@@ -23,7 +24,7 @@ function Start()
 		}
 
 		if (!Check_Table('opinions')) // Only make the table if it does not exist already
-  	{ // Create opinion database
+  		{ // Create opinion database
 			db = new dbAccess();
 			db.OpenDB("InteractionDB.sqdb");
 			tableName = "opinions";
@@ -46,7 +47,7 @@ function Start()
 	}
 	else 
 	{ // If the database does not exist, create all the tables
-  	{ // Create character database
+  		{ // Create character database
 			db = new dbAccess();
 			db.OpenDB("InteractionDB.sqdb");
 			tableName = "characters";
@@ -56,7 +57,7 @@ function Start()
 			db.CloseDB();
 		}
 
-  	{ // Create opinion database
+  		{ // Create opinion database
 			db = new dbAccess();
 			db.OpenDB("InteractionDB.sqdb");
 			tableName = "opinions";
@@ -137,12 +138,12 @@ function Default_People()
 		character_ID_start = 1;
 	}
 	// Generate new characters
-	if (System.Convert.ToInt32(character_ID_start) < 10) // For now I only want to deal with 4 people at a time (so no more are created after the first batch)
+	if (System.Convert.ToInt32(character_ID_start) < 4) // CHARACTER NUMBER For now I only want to deal with 4 people at a time (so no more are created after the first batch)
 	{
 		db = new dbAccess();
 		db.OpenDB("InteractionDB.sqdb");
 		var char_tableName = "characters";
-		for (var i = 0; i < 10; i++) // make 10 people
+		for (var i = 0; i < 4; i++) // make 10 people CHARACTER NUMBER
 		{
 			var character_ID = System.Convert.ToInt32(character_ID_start)+i; // Unique to each character for easy finding
 			var first_name = first_names[Random.Range(0,first_names.length)]; // character's first_name
