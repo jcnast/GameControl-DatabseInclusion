@@ -14,4 +14,12 @@ the other characters and so they will change their opinions according to what th
 
 These two projects are were also a testing ground for animation, particles, and using more of the Unity 3D API.
 
-The database portion I am particularily proud of, as it was based on the web version 
+The database portion I am particularily proud of, as it was based on the web version called 'village tension' (also provided as a repo).
+
+***********************
+
+To mess around with the character abilites:
+
+***********************
+
+To simulate a 10 person village based on random interactions:
