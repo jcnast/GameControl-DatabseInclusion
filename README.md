@@ -43,6 +43,7 @@ you will need both the Database_ [your_ os_ here] file and the Database_ [your_ 
 
 Open the app and run in, it will take some time for anything to happen as it is currently set up for the database to be
 re-made on the first run, and so everything must be created and enough interactions must be run for movement to begin.
+Unfortunately, the database will remain the same so the following runs will continue off from where they left off.
 
 *Characters move towards their allies and away from their enemies.
 
